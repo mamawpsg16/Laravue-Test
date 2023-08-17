@@ -49,6 +49,7 @@ const undo = () =>{
 #container{
     display: flex;
     justify-content: center;
+    overflow: hidden;
 }
 #pointers{
     position:relative;

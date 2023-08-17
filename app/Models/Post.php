@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -16,6 +17,13 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function hashImageName(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('storage/posts/' . $value) : ''
+            // set: fn ($value) => strtolower($value),
+        );
+    }
     /**
      * Scope a query to only include published posts.
      */

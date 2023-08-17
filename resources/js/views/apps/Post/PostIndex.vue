@@ -18,11 +18,13 @@
         <template v-else>
                 
             <div v-for="post in posts" :key="post.id" class="post space-y-2">
+                <a :href="post.hash_image_name" target="_blank">{{ post.image }}</a>
                 <p class="fw-bold">Title: {{ post.title  }}</p>
                 <p>Content: {{ post.content  }}</p>
                 <p>Published At: {{ formatDate(parseDate(post.created_at),'M/D/YYYY') }}</p>
                 <router-link :to="{name:'post-details', params:{ id:post.id }}" style="background-color: blue; color:#fff">View</router-link>
-            </div>
+                <button type="click" @click="deletePost(post.id)">Delete</button>
+            </div> 
         </template>
     </div>
 </template>
@@ -67,7 +69,17 @@ const getPosts = async () =>{
 }
 
 const store = () =>{
-    axios.post('/api/post',{form_data:form,'user_id':randUser() });
+    axios.post('/api/post/',{form_data:form,'user_id':randUser() });
+}
+
+const deletePost = (postId) =>{
+    axios.delete('/api/post/'+postId).then(response=>{
+        if(response.data.success){
+            posts.value = posts.value.filter(post => post.id != postId);
+        }
+    }).catch(error =>{
+        console.log(error);
+    })
 }
 
 onBeforeMount(async () => {

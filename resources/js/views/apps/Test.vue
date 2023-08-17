@@ -45,10 +45,10 @@
 
         <form @submit.prevent="upload" enctype="multipart/form-data">
             <label for="">Image</label>
-            <input type="file" ref="fileInput" @change="onFileChange" multiple accept="image/*">
+            <input type="file"  @change="onFileChange" multiple accept="image/*">
 
             <label for="">JSON</label>
-            <input type="file"  id="json">\
+            <input type="file" id="json">\
             <button type="submit">UPLOAD</button>
         </form>
     </div>
@@ -105,88 +105,88 @@ const checkBoxValue = ref('no');
 const radioInputValue = ref('no');
 const selectedFiles = ref(null)
 const onFileChange = function (event) {
-      selectedFiles.value = event.target.files;
+    selectedFiles.value = event.target.files;
 }
 
 const upload = function () {
-  if (selectedFiles.value && selectedFiles.value.length > 0) {
-    const formData = new FormData();
+    if (selectedFiles.value && selectedFiles.value.length > 0) {
+        const formData = new FormData();
 
-    for (let i = 0; i < selectedFiles.value.length; i++) {
-      const file = selectedFiles.value[i];
+        for (let i = 0; i < selectedFiles.value.length; i++) {
+            const file = selectedFiles.value[i];
 
-      // Validate file extension (you can modify this according to your allowed file types)
-      const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-      const fileExtension = file.name.split('.').pop().toLowerCase();
-      if (!allowedExtensions.includes(fileExtension)) {
-        console.error('Invalid file type. Allowed types are jpg, jpeg, png, and gif.');
-        return;
-      }
+            // Validate file extension (you can modify this according to your allowed file types)
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (!allowedExtensions.includes(fileExtension)) {
+                console.error('Invalid file type. Allowed types are jpg, jpeg, png, and gif.');
+                return;
+            }
 
-      // Validate file size (you can modify the maximum allowed size)
-      const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
-      if (file.size > maxSizeInBytes) {
-        console.error('File size exceeds the limit (5 MB).');
-        return;
-      }
+            // Validate file size (you can modify the maximum allowed size)
+            const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+            if (file.size > maxSizeInBytes) {
+                console.error('File size exceeds the limit (5 MB).');
+                return;
+            }
 
-      formData.append('files[]', file);
+            formData.append('files[]', file);
+        }
+
+        axios
+            .post('/api/uploadImage', formData)
+            .then((response) => {
+                console.log(response.data.message);
+                // Handle the response or perform any additional tasks here
+            })
+            .catch((error) => {
+                console.error(error);
+                // Handle errors here
+            });
     }
-
-    axios
-      .post('/api/uploadImage', formData)
-      .then((response) => {
-        console.log(response.data.message);
-        // Handle the response or perform any additional tasks here
-      })
-      .catch((error) => {
-        console.error(error);
-        // Handle errors here
-      });
-  }
 };
 
-const getUsers =  async function () {
-   const api_users =  await data().then(response =>{
-    if(response.status >= 200 && response.status < 300){
-        users.value = response.data;
-        console.log(users.value,'USERS');
-    }
-   }).catch(error =>{
+const getUsers = async function () {
+    const api_users = await data().then(response => {
+        if (response.status >= 200 && response.status < 300) {
+            users.value = response.data;
+            console.log(users.value, 'USERS');
+        }
+    }).catch(error => {
         throw error;
-   });
+    });
 
-   console.log('WOW');
+    console.log('WOW');
 };
 
-const getApis = function(){
+const getApis = function () {
     const shit = Apis.getComments().then(response => {
-        console.log(response,'APIS');
+        console.log(response, 'APIS');
     });
     console.log('AFTER APIS')
 }
 
-const getUrl = function(){
+const getUrl = function () {
     let url = new URL('https://jsonplaceholder.typicode.com/users');
     const response = axios.get(url)
-  .then(response => {
-    /** DESTRUCTURE RESPONSE  OBJECT */
-    let data = response.data.map(({ name, phone, username, ...other_details }) => ({
-        name,
-      phone,
-      username,
-      other_details,
-    }));
-    console.log(data, 'URL');
-    /** DESTRUCTURE RESPONSE  ARRAY */
-    const nested = [3, 4, ,7, [5, 6]];
-    const [i, , j, o,...others] = nested;
-    console.log(i,j,o,'NESTED');
-    console.log(others,'OTHERS');
-  })
-  .catch(error => {
-    console.log(error);
-  });
+        .then(response => {
+            /** DESTRUCTURE RESPONSE  OBJECT */
+            let data = response.data.map(({ name, phone, username, ...other_details }) => ({
+                name,
+                phone,
+                username,
+                other_details,
+            }));
+            console.log(data, 'URL');
+            /** DESTRUCTURE RESPONSE  ARRAY */
+            const nested = [3, 4, , 7, [5, 6]];
+            const [i, , j, o, ...others] = nested;
+            console.log(i, j, o, 'NESTED');
+            console.log(others, 'OTHERS');
+        })
+        .catch(error => {
+            console.log(error);
+        });
 
     // axios.get(request).then(response=>{
     //     console.log(response,'URLS');

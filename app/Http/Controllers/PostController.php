@@ -30,6 +30,11 @@ class PostController extends Controller
 
         return response()->json('NICE');
     }
+    public function destroy(Post $post){
+        $post->delete();
+
+        return response()->json(['success' => true, 'post'=> $post]);
+    }
 
     public function uploadImage(Request $request){
 
@@ -44,8 +49,10 @@ class PostController extends Controller
     
             try {
                 foreach ($request->file('files') as $file) {
-                    $hashName = $file->store(
+                    $hashName = $file->hashName();
+                    $file->storeAs(
                         'posts',
+                        $hashName,
                         'public'
                     );
     
